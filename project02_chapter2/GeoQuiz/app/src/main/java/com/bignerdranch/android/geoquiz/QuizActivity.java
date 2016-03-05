@@ -17,9 +17,10 @@ public class QuizActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
+    private Button mPrevButton;
     private TextView mQuestionTextView;
 
-    private Question[] mQuestionBank = new Question[] {
+    private Question[] mQuestionBank = new Question[]{
             new Question(R.string.question_oceans, true),
             new Question(R.string.question_mideast, false),
             new Question(R.string.question_africa, false),
@@ -34,7 +35,18 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView.setText(question);
     }
 
-    private void checkAnswer (boolean userPressedTrue) {
+    private void nextQuestion() {
+        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        updateQuestion();
+    }
+
+    private void prevQuestion() {
+        mCurrentIndex = mCurrentIndex - 1;
+        if (mCurrentIndex < 0) mCurrentIndex = mQuestionBank.length - 1;
+        updateQuestion();
+    }
+
+    private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
         int messageResId = 0;
@@ -54,9 +66,10 @@ public class QuizActivity extends AppCompatActivity {
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         mNextButton = (Button) findViewById(R.id.next_button);
+        mPrevButton = (Button) findViewById(R.id.prev_button);
 
-        mTrueButton = (Button)findViewById(R.id.true_button);
-        mFalseButton = (Button)findViewById(R.id.false_button);
+        mTrueButton = (Button) findViewById(R.id.true_button);
+        mFalseButton = (Button) findViewById(R.id.false_button);
 
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,9 +88,21 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                int question = mQuestionBank[mCurrentIndex].getTextResId();
-                mQuestionTextView.setText(question);
+                nextQuestion();
+            }
+        });
+
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prevQuestion();
+            }
+        });
+
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextQuestion();
             }
         });
 
