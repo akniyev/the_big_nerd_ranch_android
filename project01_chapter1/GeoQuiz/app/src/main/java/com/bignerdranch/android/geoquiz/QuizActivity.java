@@ -9,12 +9,24 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity {
-
     private Button mTrueButton;
     private Button mFalseButton;
+    private Button mNextButton;
+    private TextView mQuestionTextView;
+
+    private int mCurrentIndex = 0;
+
+    private Question[] mQuestionBank = new Question[] {
+            new Question(R.string.question_oceans, true),
+            new Question(R.string.question_mideast, true),
+            new Question(R.string.question_africa, true),
+            new Question(R.string.question_americas, true),
+            new Question(R.string.question_asia, true),
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +35,10 @@ public class QuizActivity extends AppCompatActivity {
 
         mTrueButton = (Button)findViewById(R.id.true_button);
         mFalseButton = (Button)findViewById(R.id.false_button);
+
+        mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
 
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
