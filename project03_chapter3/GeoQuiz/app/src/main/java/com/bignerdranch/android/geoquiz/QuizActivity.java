@@ -22,6 +22,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_CHEAT_ARRAY = "CHEAT_ARRAY";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -49,11 +50,12 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         Log.i(TAG, "onSaveInstainceState");
         outState.putInt(KEY_INDEX, mCurrentIndex);
+        outState.putBooleanArray(KEY_CHEAT_ARRAY, mCheatsBase);
     }
 
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mIsCheater = false;
+        mIsCheater = mCheatsBase[mCurrentIndex];
         mQuestionTextView.setText(question);
     }
 
@@ -159,6 +161,10 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mCheatsBase = savedInstanceState.getBooleanArray(KEY_CHEAT_ARRAY);
+
+            if (mCheatsBase == null)
+                mCheatsBase = new boolean[mQuestionBank.length];
         }
 
         updateQuestion();
@@ -175,6 +181,7 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            mCheatsBase[mCurrentIndex] = mIsCheater;
         }
     }
 
