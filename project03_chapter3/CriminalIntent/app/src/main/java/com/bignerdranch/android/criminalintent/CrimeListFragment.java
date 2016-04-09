@@ -19,9 +19,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-/**
- * Created by admin on 30/03/16.
- */
 public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
