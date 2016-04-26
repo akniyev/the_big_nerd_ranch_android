@@ -10,4 +10,6 @@
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="subtitle_format">%1$s crimes</string>
     <string name="date_picker_title">Date of crime:</string>
+    <string name="menu_item_add_crime">Add crime</string>
+    <string name="menu_item_show">Show</string>
 </resources>
