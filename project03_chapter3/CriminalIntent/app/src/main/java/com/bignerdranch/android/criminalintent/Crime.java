@@ -33,6 +33,10 @@ public class Crime {
         this.mSuspect = mSuspect;
     }
 
+    public String getPhotoFilename() {
+        return "IMG_" + getId().toString() + ".jpg";
+    }
+
     public Crime() {
         this(UUID.randomUUID());
     }
