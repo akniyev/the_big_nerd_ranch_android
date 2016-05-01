@@ -58,6 +58,11 @@ public class CrimeFragment extends Fragment {
     private Button mSuspectButton;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
+    }
 
 
     public static CrimeFragment newInstance(UUID crimeId) {
@@ -67,6 +72,23 @@ public class CrimeFragment extends Fragment {
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (Callbacks)activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    private void updateCrime() {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
     }
 
     @Override
@@ -155,6 +177,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                updateCrime();
             }
         });
 
@@ -169,6 +192,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
+                updateCrime();
             }
 
             @Override
@@ -247,7 +271,7 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             DateTime crimeTime = new DateTime(mCrime.getDate().getTime());
             DateTime newTime = new DateTime(date.getTime());
-
+            updateCrime();
             Date result = crimeTime.withDate(newTime.getYear(), newTime.getMonthOfYear(), newTime.getDayOfMonth()).toDate();
 
             mCrime.setDate(result);
@@ -257,7 +281,7 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
             DateTime crimeTime = new DateTime(mCrime.getDate().getTime());
             DateTime newTime = new DateTime(date.getTime());
-
+            updateCrime();
             Date result = crimeTime.withTime(newTime.getHourOfDay(), newTime.getMinuteOfHour(), 0, 0).toDate();
 
             mCrime.setDate(result);
@@ -278,6 +302,7 @@ public class CrimeFragment extends Fragment {
 
                 c.moveToFirst();
                 String suspect = c.getString(0);
+                updateCrime();
                 mCrime.setSuspect(suspect);
                 mSuspectButton.setText(suspect);
             } finally {
@@ -286,6 +311,7 @@ public class CrimeFragment extends Fragment {
         }
 
         if (requestCode == REQUEST_PHOTO) {
+            updateCrime();
             updatePhotoView();
         }
 
